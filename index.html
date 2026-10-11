@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#fff8fb">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="description" content="参考書と入試日から、毎日の学習計画を作成。進捗に合わせて計画を調整できる受験生向け学習プランアプリ。">
+<title>miraiku v3｜合格までの学習プラン</title>
+<style>
+:root{--ink:#493d50;--muted:#887b8e;--pink:#f6dce8;--pink2:#fff0f6;--lav:#e9e3fb;--lav2:#f6f3ff;--mint:#dff3e9;--yellow:#fff0c9;--line:#eee5ed;--white:#fff;--accent:#b66d93;--shadow:0 10px 30px rgba(105,75,100,.08)}
+*{box-sizing:border-box}body{margin:0;background:#fffafd;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.6}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:13px;padding:10px 15px;background:var(--ink);color:white;font-weight:700}button.secondary{background:#f4edf3;color:var(--ink)}button.soft{background:var(--pink2);color:#965779}button:disabled{opacity:.45;cursor:not-allowed}
+header{padding:22px max(18px,calc((100vw - 1120px)/2));background:linear-gradient(120deg,#fff0f6,#f6f2ff 65%,#eefaf4);border-bottom:1px solid #f2e6ef}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:43px;height:43px;border-radius:15px;background:white;display:grid;place-items:center;font-size:24px;box-shadow:var(--shadow)}h1{font-size:23px;margin:0;letter-spacing:.02em}header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.wrap{max-width:1120px;margin:0 auto;padding:22px 18px 60px}.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:17px}.eyebrow{font-size:11px;letter-spacing:.13em;color:var(--accent);font-weight:800;text-transform:uppercase}.date-label{font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.stat,.panel,.book-card,.day-card{background:white;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.stat{padding:16px}.stat .label{font-size:12px;color:var(--muted)}.stat .num{font-size:25px;font-weight:800;margin-top:3px}.stat .sub{font-size:11px;color:var(--muted)}
+.progress-track{height:7px;background:#f2edf2;border-radius:20px;overflow:hidden;margin-top:10px}.progress-fill{height:100%;background:linear-gradient(90deg,#d994b7,#b6a6eb);border-radius:20px;transition:width .2s}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}.panel{padding:19px;margin-bottom:16px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.panel h2{font-size:16px;margin:0}.panel h3{font-size:14px;margin:0 0 10px}.hint{font-size:12px;color:var(--muted);margin:5px 0 0}.field{margin-bottom:12px}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}.field input,.field select{width:100%;border:1px solid #e9dfe9;background:#fffdfd;border-radius:11px;padding:10px 11px;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:#c78eac;box-shadow:0 0 0 3px #faedf4}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.day-toggle{padding:7px 0;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--muted);font-size:11px}.day-toggle.on{background:var(--lav2);border-color:#c8b9f1;color:#705aab}.notice{background:#fff8e8;border:1px solid #f7e7bd;border-radius:12px;padding:11px 12px;font-size:12px;color:#77623b;margin:12px 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.tab{background:#f6eff5;color:var(--muted);padding:9px 13px;border-radius:12px;font-size:13px}.tab.active{background:var(--lav);color:#68549c}.view{display:none}.view.active{display:block}
+.book-list{display:grid;gap:9px}.book-card{padding:13px 14px;box-shadow:none;border-radius:15px}.book-top{display:flex;justify-content:space-between;gap:8px}.book-title{font-weight:800;font-size:14px}.pill{display:inline-block;background:var(--pink2);color:#9b5f80;border-radius:20px;padding:2px 8px;font-size:10px;white-space:nowrap}.book-meta{font-size:11px;color:var(--muted);margin-top:3px}.book-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}.book-actions button{font-size:11px;padding:6px 9px}.empty{padding:25px 12px;text-align:center;color:var(--muted);font-size:13px;background:#fffbfe;border:1px dashed #e8dce8;border-radius:15px}
+.plan-date{font-size:13px;font-weight:800}.day-card{padding:15px;margin-bottom:10px;box-shadow:none;border-radius:17px}.day-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.day-head small{font-size:11px;color:var(--muted)}.task{display:grid;grid-template-columns:22px 1fr auto;gap:9px;align-items:start;padding:10px 0;border-top:1px solid #f4edf3}.task input{margin-top:4px;accent-color:#b66d93;width:16px;height:16px}.task-name{font-size:13px;font-weight:700}.task-detail{font-size:11px;color:var(--muted)}.task.done .task-name{text-decoration:line-through;color:#a59aa6}.task.done .task-detail{opacity:.75}.minutes{font-size:11px;background:#f5f0fb;padding:4px 7px;border-radius:9px;white-space:nowrap;color:#77659d}.day-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:11px;color:var(--muted)}.day-foot button{padding:6px 9px;font-size:11px}
+.section-title{margin:4px 0 11px;font-size:14px}.subtle{color:var(--muted);font-size:12px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{width:100%}.danger{background:#fff0f0;color:#a64c58}.modal-back{position:fixed;inset:0;background:#39283c66;display:none;align-items:center;justify-content:center;padding:18px;z-index:5}.modal-back.show{display:flex}.modal{background:white;border-radius:22px;padding:22px;width:min(520px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 70px #3c284333}.modal h2{font-size:18px;margin:0 0 15px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:17px}.warning-text{color:#a96b36;font-size:12px}
+footer{text-align:center;font-size:11px;color:#a69aa8;margin-top:25px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.panel{padding:16px}header{padding:18px}.wrap{padding:17px 13px 45px}}
+@media(min-width:801px){.sticky{position:sticky;top:12px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">🌷</div><div><h1>miraiku</h1><p>今日の一歩を、合格につなげる。</p></div></div></header>
+<main class="wrap">
+  <div class="topline"><div><div class="eyebrow">YOUR STUDY JOURNEY</div><div style="font-size:18px;font-weight:800">合格までの学習プラン</div></div><div class="date-label" id="todayLabel"></div></div>
+  <section class="stats">
+    <div class="stat"><div class="label">教材の進捗</div><div class="num" id="statProgress">0%</div><div class="progress-track"><div class="progress-fill" id="progressBar" style="width:0%"></div></div></div>
+    <div class="stat"><div class="label">完了したタスク</div><div class="num" id="statDone">0</div><div class="sub" id="statTasks">全0タスク</div></div>
+    <div class="stat"><div class="label">今日の学習予定</div><div class="num" id="statToday">0分</div><div class="sub" id="statTodaySub">予定を作成しよう</div></div>
+    <div class="stat"><div class="label">試験まで</div><div class="num" id="statDays">—</div><div class="sub" id="statExam">試験日を設定</div></div>
+  </section>
+  <div class="layout">
+    <aside class="sticky">
+      <section class="panel">
+        <div class="panel-head"><h2>⚙️ 学習条件</h2><span class="pill">STEP 1</span></div>
+        <div class="field"><label for="target">志望校・目標</label><input id="target" placeholder="例：東京大学 理科三類"></div>
+        <div class="field"><label for="examDate">入試日</label><input id="examDate" type="date"></div>
+        <div class="field"><label>勉強できる曜日</label><div class="days-grid" id="weekdayToggles"></div><p class="hint">選択した曜日を学習日にします。</p></div>
+        <div class="field"><label>曜日ごとの勉強可能時間（時間）</label><div class="two">
+          <div><label for="weekdayHours" style="font-weight:500">平日</label><input id="weekdayHours" type="number" min="0" max="16" step=".5" value="3"></div>
+          <div><label for="weekendHours" style="font-weight:500">土日</label><input id="weekendHours" type="number" min="0" max="16" step=".5" value="6"></div>
+        </div></div>
+        <div class="field"><label style="display:flex;align-items:center;gap:8px;font-weight:600"><input id="enableReviews" type="checkbox" checked style="width:auto;accent-color:#b66d93"> 完了した範囲の復習タスクも自動で作る</label><p class="hint">完了後、1日・3日・7日後を目安に復習を提案します。</p></div>
+        <div class="field"><label for="planStart">計画の開始日</label><input id="planStart" type="date"></div>
+        <button class="full" id="saveSettings">条件を保存して再計画</button>
+        <p class="hint">再計画しても、完了済みタスクは保持されます。</p>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>📚 教材を登録</h2><span class="pill">STEP 2</span></div>
+        <form id="bookForm">
+          <div class="field"><label for="bookTitle">参考書・問題集の名前</label><input id="bookTitle" required placeholder="例：数学 青チャート"></div>
+          <div class="two">
+            <div class="field"><label for="bookSubject">科目</label><select id="bookSubject"><option>英語</option><option>数学</option><option>国語</option><option>物理</option><option>化学</option><option>生物</option><option>地学</option><option>社会</option><option>小論文</option><option>その他</option></select></div>
+            <div class="field"><label for="unitType">管理単位</label><select id="unitType"><option value="ページ">ページ</option><option value="問">問題</option><option value="章">章</option><option value="回">回</option><option value="単語">単語</option></select></div>
+          </div>
+          <div class="two">
+            <div class="field"><label for="totalUnits">総量</label><input id="totalUnits" type="number" min="1" step="1" required placeholder="例：320"></div>
+            <div class="field"><label for="doneUnits">完了済み</label><input id="doneUnits" type="number" min="0" step="1" value="0"></div>
+          </div>
+          <div class="two">
+            <div class="field"><label for="rounds">目標周回数</label><input id="rounds" type="number" min="1" max="10" value="1"></div>
+            <div class="field"><label for="minutesPerUnit">1単位あたり（分）</label><input id="minutesPerUnit" type="number" min=".1" max="180" step=".1" value="3"></div>
+          </div>
+          <div class="field"><label for="priority">優先度</label><select id="priority"><option value="3">高い（最優先）</option><option value="2" selected>普通</option><option value="1">低め</option></select></div>
+          <button class="full" type="submit">＋ 教材を追加して計画を作る</button>
+        </form>
+      </section>
+      <section class="panel"><div class="panel-head"><h2>📦 登録した教材</h2><span class="pill" id="bookCount">0冊</span></div><div id="bookList" class="book-list"><div class="empty">教材を登録すると、ここに表示されます。</div></div></section>
+    </aside>
+    <section>
+      <div class="tabs"><button class="tab active" data-tab="plan">🗓 日別の計画</button><button class="tab" data-tab="progress">📈 科目別進捗</button><button class="tab" data-tab="help">💡 使い方・調整</button></div>
+      <div class="view active" id="view-plan">
+        <section class="panel">
+          <div class="panel-head"><div><h2>🪄 あなたの学習プラン</h2><p class="hint" id="planSummary">教材を登録すると、日別の計画を自動生成します。</p></div><button id="replanBtn" class="soft">↻ 再計画</button></div>
+          <div id="capacityNotice"></div>
+          <div id="planList"><div class="empty">まずは参考書を登録してみよう 🌷</div></div>
+        </section>
+      </div>
+      <div class="view" id="view-progress">
+        <section class="panel"><div class="panel-head"><h2>科目別の進捗</h2><button class="secondary" id="exportBtn">データを書き出す</button></div><div id="subjectProgress"></div><p class="hint">進捗は「完了済み単位 ÷ 総量×周回数」で計算します。教材ごとの周回数を反映します。</p></section>
+      </div>
+      <div class="view" id="view-help">
+        <section class="panel"><h2>miraikuの使い方</h2>
+          <ol style="padding-left:20px;font-size:13px">
+            <li><b>学習条件</b>で入試日・学習できる曜日・時間を入力。</li>
+            <li><b>参考書・問題集</b>の総量、今の進捗、目標周回数、1単位あたりの時間を登録。</li>
+            <li>miraikuが残りの学習量を試験日までの学習日に配分します。計画には復習・予備日もできるだけ残します。</li>
+            <li>終わったタスクにチェックを入れると進捗が更新されます。未完了タスクは「再計画」で残りの日に振り分け直せます。</li>
+          </ol>
+          <div class="notice"><b>計画の考え方</b><br>教材完走を中心に、残量・優先度・所要時間・学習可能時間をもとに配分します。教材の難しさや実際の解く速さは人によって違うため、登録した「1単位あたりの時間」は実績に合わせて調整してね。</div>
+          <h3>大切なこと</h3><p class="subtle">データはこのブラウザ内に保存されます。同じ端末・ブラウザで使ってね。現バージョンではアカウント同期や複数端末同期、サーバーへの保存はありません。試験日や教材量を変更したときは「条件を保存して再計画」を押してください。</p>
+          <button class="danger" id="resetBtn">すべてのデータを削除</button>
+        </section>
+      </div>
+    </section>
+  </div>
+  <footer>miraiku · 小さな積み重ねを、未来の自信に。<br><a href="./privacy.html" style="color:#a69aa8">プライバシーについて</a> · <a href="./README.txt" style="color:#a69aa8">利用上の注意</a></footer>
+</main>
+<div class="modal-back" id="editModal"><div class="modal"><h2>教材を編集</h2><form id="editForm"></form><div class="modal-actions"><button class="secondary" id="cancelEdit" type="button">キャンセル</button><button id="saveEdit" type="button">変更を保存</button></div></div></div>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const weekdays=['日','月','火','水','木','金','土'];
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const plusDays=(iso,n)=>{const d=new Date(iso+'T12:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const fmtDate=iso=>{if(!iso)return '未設定';const d=new Date(iso+'T12:00:00');return `${d.getMonth()+1}/${d.getDate()}（${weekdays[d.getDay()]}）`};
+const dayNum=iso=>new Date(iso+'T12:00:00').getDay();
+const uid=()=>Math.random().toString(36).slice(2,10);
+const defaultState=()=>({settings:{target:'',examDate:'',planStart:todayISO(),weekdayHours:3,weekendHours:6,studyDays:[1,2,3,4,5,6],enableReviews:true},books:[],tasks:[],lastPlan:''});
+let state;
+try{state=JSON.parse(localStorage.getItem('miraiku_v3'))||JSON.parse(localStorage.getItem('miraiku_v2'))||defaultState()}catch(e){state=defaultState()}
+state.settings=Object.assign(defaultState().settings,state.settings||{});
+state.books=state.books||[];state.tasks=state.tasks||[];
+// Migration guard for older prototype tasks.
+state.tasks=state.tasks.map(t=>({...t,kind:t.kind||'study'}));
+function save(){localStorage.setItem('miraiku_v3',JSON.stringify(state))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function bookRemaining(b){return Math.max(0,b.total*b.rounds-b.done)}
+function bookPercent(b){return Math.min(100,Math.round(b.done/(b.total*b.rounds)*100))}
+function bookLabel(b){return `${b.done}${b.unit} / ${b.total*b.rounds}${b.unit}`}
+function getCapacity(d){return Math.round(((dayNum(d)===0||dayNum(d)===6)?Number(state.settings.weekendHours):Number(state.settings.weekdayHours))*60)}
+function isStudyDate(d){return state.settings.studyDays.includes(dayNum(d))&&getCapacity(d)>0}
+function nextStudyDate(target,limit){
+  let d=target;
+  for(let i=0;i<15&&d<=limit;i++,d=plusDays(d,1)){if(isStudyDate(d))return d}
+  return null;
+}
+function settingsToUI(){
+$('target').value=state.settings.target||'';$('examDate').value=state.settings.examDate||'';$('planStart').value=state.settings.planStart||todayISO();$('weekdayHours').value=state.settings.weekdayHours??3;$('weekendHours').value=state.settings.weekendHours??6;
+if($('enableReviews'))$('enableReviews').checked=state.settings.enableReviews!==false;
+$('weekdayToggles').innerHTML=weekdays.map((d,i)=>`<button type="button" class="day-toggle ${state.settings.studyDays.includes(i)?'on':''}" data-day="${i}">${d}</button>`).join('');
+}
+$('weekdayToggles').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b)return;const n=+b.dataset.day;const arr=state.settings.studyDays;if(arr.includes(n)){if(arr.length===1){alert('学習日は最低1日選んでね。');return}state.settings.studyDays=arr.filter(x=>x!==n)}else state.settings.studyDays=[...arr,n].sort();settingsToUI();});
+function readSettings(){state.settings.target=$('target').value.trim();state.settings.examDate=$('examDate').value;state.settings.planStart=$('planStart').value||todayISO();state.settings.weekdayHours=Math.max(0,Math.min(16,Number($('weekdayHours').value)||0));state.settings.weekendHours=Math.max(0,Math.min(16,Number($('weekendHours').value)||0));state.settings.enableReviews=$('enableReviews')?$('enableReviews').checked:true;}
+function makeTasks(){
+const s=state.settings, today=todayISO(), start=(s.planStart||today)<today?today:(s.planStart||today), exam=s.examDate;
+if(!exam||exam<start)return {error:'試験日を今日以降（または計画開始日以降）に設定してください。'};
+const dates=[];for(let d=start;d<=exam;d=plusDays(d,1)){if(isStudyDate(d))dates.push({date:d,capacity:getCapacity(d),used:0,slots:[]})}
+if(!dates.length)return {error:'学習日と勉強可能時間を確認してください。'};
+const completed=state.tasks.filter(t=>t.done);
+const reviews=state.tasks.filter(t=>t.kind==='review'&&!t.done&&t.date>=today);
+const books=state.books.filter(b=>bookRemaining(b)>0).map(b=>({book:b,left:bookRemaining(b),perUnit:Number(b.minutesPerUnit)||1,priority:Number(b.priority)||2}));
+const totalMin=books.reduce((a,x)=>a+x.left*x.perUnit,0), capacity=dates.reduce((a,d)=>a+d.capacity,0);
+const tasks=[];
+for(let dayIndex=0;dayIndex<dates.length;dayIndex++){
+ const day=dates[dayIndex];
+ let available=day.capacity;
+ const daysLeft=Math.max(1,dates.length-dayIndex);
+ const targets=new Map(books.map(x=>[x.book.id,Math.ceil(x.left/daysLeft)]));
+ const allocated=new Map();
+ let guard=0;
+ // Keep each book's daily portion near its fair share; avoid dozens of tiny tasks.
+ while(available>=1&&guard++<500){
+   const candidates=books.filter(x=>x.left>0&&Math.ceil(x.perUnit)<=available&&(allocated.get(x.book.id)||0)<(targets.get(x.book.id)||0))
+     .sort((a,b)=>b.priority-a.priority || (b.left*b.perUnit)-(a.left*a.perUnit));
+   if(!candidates.length)break;
+   let placed=false;
+   for(const item of candidates){
+     const targetLeft=(targets.get(item.book.id)||0)-(allocated.get(item.book.id)||0);
+     const fit=Math.floor(available/item.perUnit);
+     const units=Math.min(item.left,fit,targetLeft,20);
+     if(units<1)continue;
+     const absoluteDone=item.book.total*item.book.rounds-item.left;
+     const roundNo=Math.min(item.book.rounds,Math.floor(absoluteDone/item.book.total)+1);
+     const roundOffset=absoluteDone%item.book.total;
+     const withinRound=Math.min(units,item.book.total-roundOffset);
+     const minutes=Math.ceil(withinRound*item.perUnit);
+     tasks.push({id:uid(),kind:'study',date:day.date,bookId:item.book.id,units:withinRound,unit:item.book.unit,minutes,done:false,roundNo,startUnit:roundOffset+1,endUnit:roundOffset+withinRound});
+     item.left-=withinRound;allocated.set(item.book.id,(allocated.get(item.book.id)||0)+withinRound);available-=minutes;placed=true;
+     break;
+   }
+   if(!placed)break;
+ }
+ day.used=day.capacity-available;
+}
+const unfinished=books.reduce((a,x)=>a+x.left*x.perUnit,0);
+state.tasks=[...completed,...reviews,...tasks];
+state.lastPlan=new Date().toISOString();
+return {totalMin,capacity,dates:dates.length,unfinished,over:unfinished>0};
+}
+function doReplan(){
+ readSettings();
+ const today=todayISO(), old=state.tasks;
+ // Finished study tasks already contributed to book.done; preserve history, never add their units twice.
+ const finished=old.filter(t=>t.done);
+ const reviewTasks=old.filter(t=>t.kind==='review'&&!t.done);
+ state.tasks=[...finished,...reviewTasks];
+ // Move overdue unfinished reviews forward to the next available study date.
+ const exam=state.settings.examDate||today;
+ state.tasks.forEach(t=>{if(t.kind==='review'&&!t.done&&t.date<today){const next=nextStudyDate(today,exam);if(next)t.date=next;}});
+ const r=makeTasks();save();render();if(r.error)alert(r.error);
+}
+function render(){
+const s=state.settings,today=todayISO();
+$('todayLabel').textContent=`今日は ${fmtDate(today)}`;
+const total=state.books.reduce((a,b)=>a+b.total*b.rounds,0),done=state.books.reduce((a,b)=>a+b.done,0);
+const pct=total?Math.round(done/total*100):0;
+$('statProgress').textContent=pct+'%';$('progressBar').style.width=pct+'%';
+$('statDone').textContent=state.tasks.filter(t=>t.done).length;$('statTasks').textContent=`全${state.tasks.length}タスク`;
+const todayTasks=state.tasks.filter(t=>t.date===today);$('statToday').textContent=Math.round(todayTasks.reduce((a,t)=>a+t.minutes,0))+'分';$('statTodaySub').textContent=todayTasks.length?`${todayTasks.filter(t=>t.done).length}/${todayTasks.length}タスク完了`:'今日の予定はありません';
+if(s.examDate){const diff=Math.ceil((new Date(s.examDate+'T00:00:00')-new Date(today+'T00:00:00'))/86400000);$('statDays').textContent=diff>=0?`${diff}日`:'過ぎています';$('statExam').textContent=`入試日 ${fmtDate(s.examDate)}`}else{$('statDays').textContent='—';$('statExam').textContent='試験日を設定'}
+renderBooks();renderPlan();renderSubjects();
+}
+function renderBooks(){
+$('bookCount').textContent=state.books.length+'冊';
+if(!state.books.length){$('bookList').innerHTML='<div class="empty">教材を登録すると、ここに表示されます。</div>';return}
+$('bookList').innerHTML=state.books.map(b=>`<div class="book-card"><div class="book-top"><div><div class="book-title">${esc(b.title)}</div><div class="book-meta">${esc(b.subject)} · ${b.rounds}周 · ${esc(b.total)}${esc(b.unit)} × ${b.rounds}</div></div><span class="pill">${bookPercent(b)}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${bookPercent(b)}%"></div></div><div class="book-meta">${bookLabel(b)} · 目安 ${b.minutesPerUnit}分/${esc(b.unit)}</div><div class="book-actions"><button class="secondary" data-edit="${b.id}">編集</button><button class="secondary" data-adddone="${b.id}">進捗を追加</button><button class="danger" data-delete="${b.id}">削除</button></div></div>`).join('');
+}
+function renderPlan(){
+const s=state.settings,list=$('planList'),today=todayISO();
+$('planSummary').textContent=s.examDate?`${fmtDate(s.planStart)} 〜 ${fmtDate(s.examDate)} · ${s.target||'志望校未設定'}`:'試験日を設定すると、日別の計画を自動生成します。';
+const remaining=state.books.reduce((a,b)=>a+bookRemaining(b)*b.minutesPerUnit,0);
+const start=(s.planStart||today)<today?today:(s.planStart||today);
+let cap=0;if(s.examDate&&s.examDate>=start){for(let d=start;d<=s.examDate;d=plusDays(d,1))if(isStudyDate(d))cap+=getCapacity(d)}
+let notice='';
+if(!s.examDate)notice='<div class="notice">まずは入試日と勉強できる時間を設定してね。</div>';
+else if(s.examDate<start)notice='<div class="notice">入試日が計画開始日より前です。日付を確認してね。</div>';
+else if(remaining>cap)notice=`<div class="notice">⚠️ 教材完走には約${Math.ceil(remaining/60)}時間、入試までの学習可能時間は約${Math.floor(cap/60)}時間です。時間を増やすか、優先教材・周回数を見直してね。</div>`;
+else if(state.books.length&&remaining>0)notice='<div class="notice" style="background:#f0faf4;border-color:#d5eee0;color:#547663">🌿 完走できる見込みの配分です。実際の進み具合に合わせて調整しよう。</div>';
+$('capacityNotice').innerHTML=notice;
+if(!state.books.length){list.innerHTML='<div class="empty">まずは参考書を登録してみよう 🌷</div>';return}
+if(!state.tasks.length){list.innerHTML=`<div class="empty">日別計画がまだありません。<br><br><button onclick="document.getElementById('saveSettings').click()">条件を保存して計画を作成</button></div>`;return}
+const grouped={};state.tasks.forEach(t=>(grouped[t.date]??=[]).push(t));
+const dates=Object.keys(grouped).sort();
+list.innerHTML=dates.map(date=>{
+ const tasks=grouped[date],mins=tasks.reduce((a,t)=>a+t.minutes,0),isToday=date===today,isPast=date<today;
+ return `<div class="day-card" ${isToday?'style="border-color:#d5b0c9;background:#fffafd"':''}><div class="day-head"><div><div class="plan-date">${fmtDate(date)} ${isToday?'<span class="pill">TODAY</span>':''}</div><small>${isPast?'過去の予定':tasks.filter(t=>t.done).length+'/'+tasks.length+' タスク完了'}</small></div><span class="minutes">${mins}分</span></div>${tasks.map(t=>{const b=state.books.find(x=>x.id===t.bookId);const isReview=t.kind==='review';const title=isReview?`復習：${b?.title||'教材'}`:(b?.title||'削除済み教材');const detail=isReview?`${b?.subject||''} · 前に進めた範囲を解き直す（${t.reviewLabel||'復習'}）`:`${b?.subject||''} · ${t.roundNo||1}周目 ${t.startUnit||''}${esc(t.unit)}〜${t.endUnit||''}${esc(t.unit)}（${t.units}${esc(t.unit)}）`;return `<label class="task ${t.done?'done':''}"><input type="checkbox" data-task="${t.id}" ${t.done?'checked':''}><span><span class="task-name">${esc(title)}</span><br><span class="task-detail">${detail}</span></span><span class="minutes">${t.minutes}分</span></label>`}).join('')}<div class="day-foot"><span>${tasks.every(t=>t.done)?'✨ この日の予定は完了！':'小さく進めていこう'}</span>${tasks.some(t=>!t.done)?`<button class="soft" data-completeday="${date}">この日を完了</button>`:''}</div></div>`
+}).join('');
+}
+function renderSubjects(){
+const subs={};state.books.forEach(b=>{if(!subs[b.subject])subs[b.subject]={total:0,done:0,books:0};subs[b.subject].total+=b.total*b.rounds;subs[b.subject].done+=b.done;subs[b.subject].books++});
+const keys=Object.keys(subs);$('subjectProgress').innerHTML=keys.length?keys.map(k=>{const x=subs[k],p=Math.round(x.done/x.total*100);return `<div style="margin:15px 0"><div style="display:flex;justify-content:space-between;font-size:13px"><b>${esc(k)}</b><span>${p}% · ${x.books}教材</span></div><div class="progress-track"><div class="progress-fill" style="width:${p}%"></div></div><div class="subtle">${x.done} / ${x.total}単位（周回数込み）</div></div>`}).join(''):'<div class="empty">教材を登録すると、科目別に表示されます。</div>';
+}
+function addReviews(task){
+if(state.settings.enableReviews===false||task.kind!=='study')return;
+const exam=state.settings.examDate||plusDays(task.date,14);
+[1,3,7].forEach((offset,i)=>{
+ const target=plusDays(task.date,offset),date=nextStudyDate(target,exam);
+ if(!date)return;
+ state.tasks.push({id:uid(),kind:'review',date,bookId:task.bookId,sourceTaskId:task.id,units:task.units,unit:task.unit,minutes:Math.max(5,Math.ceil(task.minutes*.3)),done:false,reviewLabel:['翌日復習','3日後復習','1週間後復習'][i]});
+});
+}
+$('saveSettings').addEventListener('click',()=>{readSettings();const r=makeTasks();save();render();if(r.error)alert(r.error)});
+$('replanBtn').addEventListener('click',doReplan);
+$('bookForm').addEventListener('submit',e=>{
+e.preventDefault();const total=Number($('totalUnits').value),done=Number($('doneUnits').value)||0,rounds=Number($('rounds').value)||1,mpu=Number($('minutesPerUnit').value)||1;
+if(total<1||done<0||done>total*rounds){alert('総量・完了済みの数を確認してね。');return}
+state.books.push({id:uid(),title:$('bookTitle').value.trim(),subject:$('bookSubject').value,unit:$('unitType').value,total,done:Math.min(done,total*rounds),rounds,minutesPerUnit:mpu,priority:Number($('priority').value)||2});
+$('bookForm').reset();$('rounds').value=1;$('doneUnits').value=0;$('minutesPerUnit').value=3;$('priority').value=2;
+readSettings();const r=makeTasks();save();render();if(r.error)alert('教材を登録しました。'+r.error);
+});
+$('bookList').addEventListener('click',e=>{
+const edit=e.target.closest('[data-edit]')?.dataset.edit,add=e.target.closest('[data-adddone]')?.dataset.adddone,del=e.target.closest('[data-delete]')?.dataset.delete;
+if(edit)openEdit(edit);
+if(add){const b=state.books.find(x=>x.id===add);if(!b)return;const raw=prompt(`「${b.title}」の完了済み${b.unit}数を入力（全周回分、現在 ${b.done}/${b.total*b.rounds}）`,String(b.done));if(raw===null)return;const n=Number(raw);if(!Number.isFinite(n)||n<0||n>b.total*b.rounds){alert('数値を確認してね。');return}b.done=n;state.tasks=state.tasks.filter(t=>t.done);makeTasks();save();render()}
+if(del&&confirm('この教材と関連する計画・復習を削除しますか？')){state.books=state.books.filter(b=>b.id!==del);state.tasks=state.tasks.filter(t=>t.bookId!==del);makeTasks();save();render()}
+});
+function openEdit(id){
+const b=state.books.find(x=>x.id===id);if(!b)return;
+$('editForm').innerHTML=`<input type="hidden" id="editId" value="${b.id}"><div class="field"><label>教材名</label><input id="eTitle" value="${esc(b.title)}" required></div><div class="two"><div class="field"><label>科目</label><select id="eSubject">${['英語','数学','国語','物理','化学','生物','地学','社会','小論文','その他'].map(x=>`<option ${x===b.subject?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>管理単位</label><select id="eUnit">${['ページ','問','章','回','単語'].map(x=>`<option ${x===b.unit?'selected':''}>${x}</option>`).join('')}</select></div></div><div class="two"><div class="field"><label>総量</label><input id="eTotal" type="number" min="1" value="${b.total}"></div><div class="field"><label>完了済み単位（全周回分）</label><input id="eDone" type="number" min="0" value="${b.done}"></div></div><div class="two"><div class="field"><label>目標周回数</label><input id="eRounds" type="number" min="1" max="10" value="${b.rounds}"></div><div class="field"><label>1単位あたり（分）</label><input id="eMpu" type="number" min=".1" step=".1" value="${b.minutesPerUnit}"></div></div><div class="field"><label>優先度</label><select id="ePriority"><option value="3" ${b.priority===3?'selected':''}>高い</option><option value="2" ${b.priority===2?'selected':''}>普通</option><option value="1" ${b.priority===1?'selected':''}>低め</option></select></div>`;
+$('editModal').classList.add('show');
+}
+$('cancelEdit').addEventListener('click',()=>$('editModal').classList.remove('show'));
+$('saveEdit').addEventListener('click',()=>{
+const id=$('editId').value,b=state.books.find(x=>x.id===id);if(!b)return;
+const total=Number($('eTotal').value),rounds=Number($('eRounds').value),done=Number($('eDone').value),mpu=Number($('eMpu').value);
+if(total<1||rounds<1||done<0||done>total*rounds||mpu<=0){alert('入力内容を確認してね。');return}
+Object.assign(b,{title:$('eTitle').value.trim(),subject:$('eSubject').value,unit:$('eUnit').value,total,done,rounds,minutesPerUnit:mpu,priority:Number($('ePriority').value)});
+$('editModal').classList.remove('show');state.tasks=state.tasks.filter(t=>t.done);makeTasks();save();render();
+});
+$('planList').addEventListener('change',e=>{
+const id=e.target.dataset.task;if(!id)return;const t=state.tasks.find(x=>x.id===id);if(!t)return;
+const checked=e.target.checked;if(t.done===checked)return;t.done=checked;
+if(t.kind==='study'){
+ const b=state.books.find(x=>x.id===t.bookId);
+ if(b)b.done=Math.max(0,Math.min(b.total*b.rounds,b.done+(checked?t.units:-t.units)));
+ if(checked)addReviews(t);
+ else state.tasks=state.tasks.filter(x=>x.sourceTaskId!==t.id);
+}
+save();render();
+});
+$('planList').addEventListener('click',e=>{
+const d=e.target.closest('[data-completeday]')?.dataset.completeday;if(!d)return;
+state.tasks.filter(t=>t.date===d&&!t.done).forEach(t=>{
+t.done=true;
+if(t.kind==='study'){const b=state.books.find(x=>x.id===t.bookId);if(b)b.done=Math.min(b.total*b.rounds,b.done+t.units);addReviews(t)}
+});
+save();render();
+});
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+btn.dataset.tab))}));
+$('exportBtn').addEventListener('click',()=>{const data=JSON.stringify(state,null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='miraiku-data.json';a.click();URL.revokeObjectURL(a.href)});
+$('resetBtn').addEventListener('click',()=>{if(confirm('教材・計画・設定をすべて削除します。この操作は取り消せません。よろしいですか？')){state=defaultState();settingsToUI();save();render()}});
+settingsToUI();
+if(state.books.length&&!state.tasks.length&&state.settings.examDate)makeTasks();
+save();render();
+})();
+</script>
+<script>if ("serviceWorker" in navigator && location.protocol.startsWith("http")) { window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {})); }</script>
+</body>
+</html>

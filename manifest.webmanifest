@@ -1,0 +1,19 @@
+{
+  "name": "miraiku｜合格までの学習プラン",
+  "short_name": "miraiku",
+  "description": "参考書を完走するための学習計画アプリ",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffafd",
+  "theme_color": "#fff8fb",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
